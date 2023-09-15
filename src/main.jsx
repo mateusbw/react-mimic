@@ -2,58 +2,59 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
-const app = (
-  <div style="background: salmon">
-    <h1>Hello World</h1>
-    <h2>Miners React</h2>
-  </div>
-)
-
-function createElement(type, props, ...children) {
+const createElement = (type, props, ...children) => {
   return {
     $$typeof: Symbol.for('react.element'),
     type,
     props: {
       ...props,
-      children: children.map(child =>
-        typeof child === "object" ? child : createTextElement(child)
-      )
+      children: children.map(child => {
+        return typeof child === 'object' ? child : createTextElement(child)
+      })
     },
-    ref: null
-  };
+    ref: null,
+  }
 }
 
-function createTextElement(text) {
+const createTextElement = (text) => {
   return {
-    type: "TEXT_ELEMENT",
+    type: 'TEXT_ELEMENT',
     props: {
-      nodeValue: text,
+      text,
       children: []
-    }
-  };
-}
-
-function renderElement(element, container) {
-  const dom =
-    element.type == "TEXT_ELEMENT"
-      ? document.createTextNode("")
-      : document.createElement(element.type);
-  const isProperty = key => key !== "children";
-  Object.keys(element.props)
-    .filter(isProperty)
-    .forEach(name => {
-      dom[name] = element.props[name];
-    });
-  element.props.children.forEach(child => renderElement(child, dom));
-  container.appendChild(dom);
-}
-
-const createRoot = (element) => {
-  return {
-    render: (component) => {
-      renderElement(component, element)
     }
   }
 }
 
-createRoot(document.getElementById('root')).render(app)
+const helloWorld = <h1 fook="bar"><span>{2}</span><img src="data:image/jpeg;base64,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"></img></h1>
+
+const createDomNode = (reactElement) => {
+  const domNode = reactElement.type === 'TEXT_ELEMENT' ? document.createTextNode(reactElement.props.text) : document.createElement(reactElement.type)
+
+  Object.entries(reactElement.props).forEach(([propName, propValue]) => {
+    if(reactElement.type === 'TEXT_ELEMENT') return;
+
+    if(propName !== 'children'){
+      domNode.setAttribute(propName, propValue)
+    }
+
+  })
+
+  reactElement.props.children.forEach(child => {
+    const childDomNode = createDomNode(child)
+    domNode.appendChild(childDomNode)
+  })
+
+  return domNode
+}
+
+const createRoot = (container) => {
+  return {
+    render: (element) => {
+      console.log(element)
+      container.appendChild(createDomNode(element))
+    }
+  }
+}
+
+createRoot(document.getElementById('root')).render(helloWorld)
